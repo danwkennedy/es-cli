@@ -1,0 +1,23 @@
+{
+  "extends": "eslint:recommended",
+  "env": {
+    "node": true,
+    "mocha": true,
+    "es6": true
+  },
+  "rules": {
+    "no-console": 0,
+    "indent": ["error", 2],
+    "camelcase": ["error", { "properties": "never" }],
+    "block-spacing": "error",
+    "max-lines": ["warn", 150],
+    "max-depth": 1,
+    "no-nested-ternary": "error",
+    "no-unneeded-ternary": "error",
+    "constructor-super": "error",
+    "no-this-before-super": "error",
+    "no-var": "warn",
+    "prefer-template": "warn",
+    "template-curly-spacing": ["warn", "always"]
+  }
+}
