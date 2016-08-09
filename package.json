@@ -1,5 +1,5 @@
 {
-  "name": "es-cli",
+  "name": "stretchy-cli",
   "version": "0.5.0",
   "main": "src/index.js",
   "engines": {
