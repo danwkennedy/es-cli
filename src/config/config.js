@@ -24,7 +24,7 @@ module.exports = class Configuration {
   }
 
   getIndex(alias) {
-    return this.config.indexes.find( index => {
+    return this.getIndexes().find( index => {
       return index.alias === alias;
     })
   }
