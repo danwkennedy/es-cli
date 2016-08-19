@@ -30,3 +30,14 @@
 
 
 
+<a name="0.7.0"></a>
+# [0.7.0](//compare/0.6.0...v0.7.0) (2016-08-19)
+
+
+### Features
+
+* **config:** default the working directory to cwd f4a81af
+* **public:** expose the configurator publically c463b41
+
+
+
