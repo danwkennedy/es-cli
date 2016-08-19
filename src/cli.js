@@ -1,7 +1,6 @@
 #!/usr/bin/env node
 const commander = require('commander');
-const commands = require('./commands');
-const configurator = require('./config');
+const { commands, configurator } = require('./');
 
 const chalk = require('chalk');
 
