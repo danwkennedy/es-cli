@@ -1,4 +1,6 @@
 const co = require('co');
+const chalk = require('chalk');
+const print = require('pretty-print');
 const cliff = require('cliff');
 
 module.exports = function configureCommand(commander, config) {
@@ -6,20 +8,17 @@ module.exports = function configureCommand(commander, config) {
     .description('Reindexes the documents from the old index to the new one')
     .option('-w, --wait [false]', `Wait for the request to complete`)
     .option('-s, --size [100]', `The batch size to move documents`)
-
     .action(getCommandHandler(config));
 }
 
 function getCommandHandler(config) {
 
   return function reIndex(source, dest, opts) {
-
     co(function*() {
-
       let client = yield config.getClient();
 
       let params = {
-        waitForCompletion: opts.wait,
+        waitForCompletion: !!opts.wait,
         body: {
           source: {
             index: source,
@@ -31,18 +30,24 @@ function getCommandHandler(config) {
         }
       };
 
+      console.info(`Re-indexing from ${ source } to ${ dest }`);
       let response = yield client.reindex(params);
 
       if (opts.wait) {
         let rows = [
-          ['Took', '# Updated', '# Batches', '# conflicts', '# failures', '# created'],
+          ['Took', '# Updated', '# Batches', '# Conflicts', '# Failures', '# Created'],
           [response.took, response.updated, response.batches, response.version_conflicts, response.failures.length, response.created]
         ];
 
         console.info(cliff.stringifyRows(rows, ['green']));
-      }
 
-      // TODO: handle returning a task
+        if (response.failures.length) {
+          console.info(chalk.red('Failures'));
+          print(response.failures, { leftPadding: 2 });
+        }
+      } else {
+        console.info(response.task);
+      }
     });
 
   };
