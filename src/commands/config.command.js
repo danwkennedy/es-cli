@@ -3,7 +3,7 @@ const chalk = require('chalk');
 const co = require('co');
 
 module.exports = function configureCommand(commander, config) {
-  commander.command('config')
+  commander.command('es:config')
       .description('Displays the parsed configuration')
       .action(getCommandHandler(config));
 };
