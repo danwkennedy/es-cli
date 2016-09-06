@@ -36,7 +36,6 @@
     "elasticsearch": "^11.0.1",
     "es6-error": "^3.0.1",
     "pretty-print": "^1.1.0",
-    "prettyprint": "^1.1.0",
     "schema-inspector": "^1.6.4"
   }
 }
