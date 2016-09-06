@@ -41,3 +41,13 @@
 
 
 
+<a name="0.8.0"></a>
+# [0.8.0](//compare/0.7.0...v0.8.0) (2016-09-06)
+
+
+### Features
+
+* **reindex:** add reindexing from one index to another a49b1bc
+
+
+
