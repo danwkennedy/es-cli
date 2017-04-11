@@ -1,4 +1,3 @@
-const co = require('co');
 const chalk = require('chalk');
 
 module.exports = function configureCommand(commander, config) {
@@ -9,7 +8,7 @@ module.exports = function configureCommand(commander, config) {
 
 function getCommandHandler(config) {
 
-  return function moveAlias(alias, index) {
+  const moveAlias = async (alias, index) => {
 
     let aliases = config.getIndexes().map(index => index.alias);
 
@@ -18,30 +17,29 @@ function getCommandHandler(config) {
       return;
     }
 
-    co(function*() {
-      let client = yield config.getClient();
+    let client = await config.getClient();
 
-      let oldIndex = yield client.indices.getAlias({ name: alias })
-        .then( body => Object.keys(body)[0])
-        .catch(() => '');
+    let oldIndex = await client.indices.getAlias({ name: alias })
+      .then(body => Object.keys(body)[0])
+      .catch(() => '');
 
-      let actions = [
-          { add: { alias: alias, index: index }}
-      ];
+    let actions = [
+      { add: { alias: alias, index: index } }
+    ];
 
-      if (oldIndex) {
-        console.info(`Removing alias ${ alias } from`, chalk.red(oldIndex));
-        actions.unshift({ remove: { index: oldIndex, alias: alias }});
+    if (oldIndex) {
+      console.info(`Removing alias ${ alias } from`, chalk.red(oldIndex));
+      actions.unshift({ remove: { index: oldIndex, alias: alias } });
+    }
+
+    console.info(`Adding alias ${ alias } to`, chalk.green(index));
+    await client.indices.updateAliases({
+      body: {
+        actions: actions
       }
-
-      console.info(`Adding alias ${ alias } to`, chalk.green(index));
-      yield client.indices.updateAliases({
-        body: {
-          actions: actions
-        }
-      });
-
     });
+
+    return moveAlias;
   };
 
 }

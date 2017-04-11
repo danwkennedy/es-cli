@@ -1,4 +1,3 @@
-const co = require('co');
 const chalk = require('chalk');
 
 module.exports = function configureCommand(commander, config) {
@@ -9,14 +8,15 @@ module.exports = function configureCommand(commander, config) {
 
 function getCommandHandler(config) {
 
-  return function removeIndices(names) {
-    co(function*() {
-      let client = yield config.getClient();
+  const removeIndices = async (names) => {
+    let client = await config.getClient();
 
-      for(let index of names) {
-        console.info('Removing index', chalk.red(index));
-        yield client.indices.delete({ index: index });
-      }
-    });
-  }
+    for (let index of names) {
+      console.info('Removing index', chalk.red(index));
+      await client.indices.delete({ index: index });
+    }
+  };
+
+  return removeIndices;
 }
+

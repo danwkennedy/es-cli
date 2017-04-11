@@ -5,12 +5,26 @@
     "mocha": true,
     "es6": true
   },
+  "parserOptions": {
+    "ecmaVersion": 8
+  },
   "rules": {
     "no-console": 0,
-    "indent": ["error", 2],
-    "camelcase": ["error", { "properties": "never" }],
+    "indent": [
+      "error",
+      2
+    ],
+    "camelcase": [
+      "error",
+      {
+        "properties": "never"
+      }
+    ],
     "block-spacing": "error",
-    "max-lines": ["warn", 150],
+    "max-lines": [
+      "warn",
+      150
+    ],
     "max-depth": 1,
     "no-nested-ternary": "error",
     "no-unneeded-ternary": "error",
@@ -18,6 +32,9 @@
     "no-this-before-super": "error",
     "no-var": "warn",
     "prefer-template": "warn",
-    "template-curly-spacing": ["warn", "always"]
+    "template-curly-spacing": [
+      "warn",
+      "always"
+    ]
   }
 }

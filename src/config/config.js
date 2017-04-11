@@ -6,9 +6,9 @@ module.exports = class Configuration {
     this.config = config;
   }
 
-  getClient() {
+  async getClient() {
     if (this.config.getClient) {
-      return Promise.resolve(this.config.getClient());
+      return this.config.getClient();
     }
 
     let args = {
@@ -16,7 +16,7 @@ module.exports = class Configuration {
       apiVersion: this.config.connection.version
     };
 
-    return Promise.resolve( new elasticsearch.Client(args));
+    return new elasticsearch.Client(args);
   }
 
   getIndexes() {
@@ -24,7 +24,7 @@ module.exports = class Configuration {
   }
 
   getIndex(alias) {
-    return this.getIndexes().find( index => {
+    return this.getIndexes().find(index => {
       return index.alias === alias;
     })
   }

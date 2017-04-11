@@ -1,38 +1,39 @@
-const co = require('co');
 const chalk = require('chalk');
 
 module.exports = function configureCommand(commander, config) {
-  commander.command('index:create <alias> <name>')
+  commander.command('index:create [options] <alias> [name]')
     .description('Creates a new index')
     .option('-m, --move-alias [false]', `Move the alias to the new index`)
+    .option(`--shards [1]`, `The number of shards available to the index`)
+    .option(`--replicas [1]`, `The number of replicas on the index`)
     .action(getCommandHandler(config));
 };
 
 function getCommandHandler(config) {
-  return function (alias, name, opts) {
+  return async (alias, name, opts) => {
 
-    co(function*() {
-      let index = config.getIndex(alias);
+    let index = config.getIndex(alias);
 
-      if (!index) {
-        return console.info(`Could not find alias '${ alias }'`);
+    if (!index) {
+      return console.info(chalk.red(`Could not find alias '${ alias }'`));
+    }
+
+    let elasticsearch = await config.getClient();
+    let indexName = getName(name, alias);
+
+    await elasticsearch.indices.create({
+      index: indexName,
+      body: {
+        mappings: index.mappings,
+        settings: index.settings
       }
+    });
 
-      let elasticsearch = yield config.getClient();
-      let indexName = getName(name, alias);
+    if (opts.moveAlias) {
+      await moveAlias(elasticsearch, alias, indexName);
+    }
 
-      yield elasticsearch.indices.create({
-        index: indexName,
-        body: {
-          mappings: index.mappings,
-          settings: index.settings
-        }
-      });
-
-      if (opts.moveAlias) {
-        yield moveAlias(elasticsearch, alias, indexName);
-      }
-    }).catch( err => { console.error(chalk.red(err.message)) });
+    console.info(indexName);
   };
 }
 
@@ -43,23 +44,20 @@ function getName(name, alias) {
   return `${ alias }-${ (new Date()).getTime() }`;
 }
 
-function moveAlias(client, alias, newIndex) {
-  return client.indices.getAlias({ name: alias })
-    .then( body => Object.keys(body)[0])
-    .catch(() => '')
-    .then( oldIndex => {
-      let actions = [
-        { add: { alias: alias, index: newIndex }}
-      ];
+async function moveAlias(client, alias, newIndex) {
+  const oldIndex = client.indices.getAlias({ name: alias }).then(body => Object.keys(body)[0]).catch(() => '');
 
-      if (oldIndex) {
-        actions.unshift({ remove: { index: oldIndex, alias: alias }});
-      }
+  let actions = [
+    { add: { alias: alias, index: newIndex } }
+  ];
 
-      return client.indices.updateAliases({
-        body: {
-          actions: actions
-        }
-      });
-    });
+  if (oldIndex) {
+    actions.unshift({ remove: { index: oldIndex, alias: alias } });
+  }
+
+  return client.indices.updateAliases({
+    body: {
+      actions: actions
+    }
+  });
 }

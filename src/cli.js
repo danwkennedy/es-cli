@@ -4,12 +4,15 @@ const { commands, configurator } = require('./');
 
 const chalk = require('chalk');
 
-process.on('uncaughtException', err => {
+process.on('uncaughtException', handleError);
+process.on('unhandledRejection', handleError);
+
+function handleError(err) {
   console.log(chalk.red('Uncaught Exception:'));
 
   console.log(err);
   process.exit(1);
-});
+}
 
 const config = configurator.resolve(process.cwd());
 
