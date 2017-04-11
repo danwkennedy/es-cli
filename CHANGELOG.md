@@ -51,3 +51,19 @@
 
 
 
+<a name="0.9.0"></a>
+# [0.9.0](//compare/0.8.0...v0.9.0) (2017-04-11)
+
+
+### Features
+
+* **package:** use async functions and drop co 791719c
+* **readme:** add stability warning 33c8f1f
+
+
+### BREAKING CHANGES
+
+* package: this bumps the version of node to >= 7.6.0
+
+
+
