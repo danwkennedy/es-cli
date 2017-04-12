@@ -38,8 +38,7 @@ function getCommandHandler(config) {
         actions: actions
       }
     });
-
-    return moveAlias;
   };
 
+  return moveAlias;
 }

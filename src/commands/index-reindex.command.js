@@ -3,7 +3,7 @@ const print = require('pretty-print');
 const cliff = require('cliff');
 
 module.exports = function configureCommand(commander, config) {
-  commander.command('index:reindex [options] <source> <dest>')
+  commander.command('index:reindex <source> <dest>')
     .description('Reindexes the documents from the old index to the new one')
     .option('-w, --wait [false]', `Wait for the request to complete`)
     .option('-s, --size [100]', `The batch size to move documents`)

@@ -1,16 +1,18 @@
 const chalk = require('chalk');
 
 module.exports = function configureCommand(commander, config) {
-  commander.command('index:create [options] <alias> [name]')
+  commander.command('index:create <alias>')
     .description('Creates a new index')
-    .option('-m, --move-alias [false]', `Move the alias to the new index`)
-    .option(`--shards [1]`, `The number of shards available to the index`)
-    .option(`--replicas [1]`, `The number of replicas on the index`)
+    .option(`-n, --name [value]`, `A name for the index`, null)
+    .option('-m, --move-alias', `Move the alias to the new index`, false)
+    .option(`--shards [1]`, `The number of shards available to the index`, 1)
+    .option(`--replicas [1]`, `The number of replicas on the index`, 1)
     .action(getCommandHandler(config));
 };
 
 function getCommandHandler(config) {
-  return async (alias, name, opts) => {
+  return async (alias, opts = {}) => {
+    const { name, shards, replicas, moveAlias: shouldMove } = opts;
 
     let index = config.getIndex(alias);
 
@@ -25,11 +27,11 @@ function getCommandHandler(config) {
       index: indexName,
       body: {
         mappings: index.mappings,
-        settings: index.settings
+        settings: Object.assign({}, index.settings, { number_of_shards: shards, number_of_replicas: replicas })
       }
     });
 
-    if (opts.moveAlias) {
+    if (shouldMove) {
       await moveAlias(elasticsearch, alias, indexName);
     }
 
@@ -45,7 +47,7 @@ function getName(name, alias) {
 }
 
 async function moveAlias(client, alias, newIndex) {
-  const oldIndex = client.indices.getAlias({ name: alias }).then(body => Object.keys(body)[0]).catch(() => '');
+  const oldIndex = await client.indices.getAlias({ name: alias }).then(body => Object.keys(body)[0]).catch(() => '');
 
   let actions = [
     { add: { alias: alias, index: newIndex } }
