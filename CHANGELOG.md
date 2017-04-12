@@ -67,3 +67,13 @@
 
 
 
+<a name="0.9.1"></a>
+## [0.9.1](//compare/0.9.0...v0.9.1) (2017-04-12)
+
+
+### Bug Fixes
+
+* **reindex:** don't list options twice d3901c4
+
+
+
