@@ -34,7 +34,7 @@
     "commander": "^2.9.0",
     "elasticsearch": "^12.0.0",
     "es6-error": "^4.0.0",
-    "pretty-print": "^1.1.0",
+    "pretty-print": "^2.0.0",
     "schema-inspector": "^1.6.4"
   }
 }
