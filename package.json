@@ -23,7 +23,7 @@
     "git-hooks": "^1.1.0",
     "istanbul": "^0.4.4",
     "mocha": "^6.2.0",
-    "nodemon": "^1.9.2",
+    "nodemon": "^2.0.1",
     "proxyquire": "^2.1.1",
     "sinon": "^7.3.2"
   },
