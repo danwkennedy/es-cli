@@ -22,7 +22,7 @@
     "eslint": "^6.1.0",
     "git-hooks": "^1.1.0",
     "istanbul": "^0.4.4",
-    "mocha": "^7.0.1",
+    "mocha": "^8.0.1",
     "nodemon": "^2.0.2",
     "proxyquire": "^2.1.1",
     "sinon": "^9.0.0"
